@@ -26,25 +26,26 @@ import re
 import logging
 import ctypes.util
 
-# These are the definitions that we need 
-cuse_export_regex = ['^FUSE_SET_.*', 
-			'^XATTR_.*', 
-			'fuse_reply_.*', 
-			'cuse_.*',
-			'CUSE_.*', 
-			'fuse_chan.*']
-cuse_export_symbols = ['fuse_set_signal_handlers', 
-			    'fuse_session_add_chan',
-			    'fuse_session_loop_mt', 
-			    'fuse_session_remove_chan',
-			    'fuse_remove_signal_handlers',
-			    'fuse_session_destroy',
-			    'fuse_req_ctx',
-			    'fuse_session_loop', 
-			    'ENOATTR', 
-			    'ENOTSUP',
-			    'fuse_version',
-			    'fuse_kern_chan_new']
+# These are the definitions that we need
+cuse_export_regex = ['^FUSE_SET_.*',
+                     '^XATTR_.*',
+                     'fuse_reply_.*',
+                     'cuse_.*',
+                     'CUSE_.*',
+                     'fuse_chan.*']
+cuse_export_symbols = ['fuse_set_signal_handlers',
+                       'fuse_session_add_chan',
+                       'fuse_session_loop_mt',
+                       'fuse_session_remove_chan',
+                       'fuse_remove_signal_handlers',
+                       'fuse_session_destroy',
+                       'fuse_req_ctx',
+                       'fuse_session_loop',
+                       'ENOATTR',
+                       'ENOTSUP',
+                       'fuse_version',
+                       'fuse_kern_chan_new']
+
 
 class build_ctypes(Command):
 
@@ -53,37 +54,36 @@ class build_ctypes(Command):
     boolean_options = []
 
     def initialize_options(self):
-         pass
+        pass
 
     def finalize_options(self):
         pass
 
-    def do_ctypes(self, header="fuse_ctypes.h", output="ctypes_api.py", 
-		regex=cuse_export_regex, symbols=cuse_export_symbols, libs=['fuse']):
+    def do_ctypes(self, header="fuse_ctypes.h", output="ctypes_api.py",
+                  regex=cuse_export_regex, symbols=cuse_export_symbols, libs=['fuse']):
         '''Create ctypes API to given headers'''
 
-
-        basedir = os.path.abspath(os.path.dirname(sys.argv[0]))
-#        sys.path.insert(0, os.path.join(basedir, 'ctypeslib.zip'))
         from ctypeslib import h2xml, xml2py
         from ctypeslib.codegen import codegenerator as ctypeslib
+
+        basedir = os.path.abspath(os.path.dirname(sys.argv[0]))
 
         print('Creating ctypes API from local headers...')
 
         cflags = self.get_cflags()
         print('Using cflags: %s' % ' '.join(cflags))
 
-	for l in libs:
-	    if not ctypes.util.find_library(l):
-        	print('Could not find %s library' %l, file=sys.stderr)
-        	sys.exit(1)
+        for l in libs:
+            if not ctypes.util.find_library(l):
+                print('Could not find %s library' % l, file=sys.stderr)
+                sys.exit(1)
 
         # Create temporary XML file
         tmp_fh = tempfile.NamedTemporaryFile()
         tmp_name = tmp_fh.name
 
         print('Calling h2xml...')
-        argv = [ 'h2xml.py', '-o', tmp_name, '-c', '-q', '-I', basedir, header ]
+        argv = ['h2xml.py', '-o', tmp_name, '-c', '-q', '-I', basedir, header]
         argv += cflags
         ctypeslib.ASSUME_STRINGS = False
         ctypeslib.CDLL_SET_ERRNO = False
@@ -94,10 +94,10 @@ class build_ctypes(Command):
 
         print('Calling xml2py...')
         api_file = os.path.join(basedir, 'cuse', output)
-        argv = [ 'xml2py.py', '-c', '-d', '-v', tmp_name, '-o', api_file]
+        argv = ['xml2py.py', '-c', '-d', '-v', tmp_name, '-o', api_file]
         for l in libs:
-    	    argv.append('-l')
-    	    argv.append(l)
+            argv.append('-l')
+            argv.append(l)
         for el in regex:
             argv.append('-r')
             argv.append(el)
@@ -111,10 +111,10 @@ class build_ctypes(Command):
 
         print('Code generation complete.')
 
-
     def run(self):
         '''Create ctypes API to local CUSE headers'''
-        print ("Creating ctypes for CUSE")
+
+        print("Creating ctypes for CUSE")
         self.do_ctypes('cuse_ctypes.h', 'cuse_api.py')
         self.do_ctypes('ioctl_ctypes.h', 'ioctl_api.py', regex=[], symbols=[], libs=[])
         print('Code generation complete.')
@@ -142,7 +142,7 @@ setup(name='cusepy',
       author='Naranjo Manuel Francisco',
       author_email='manuel@aircable.net',
       url='http://code.google.com/p/cusepy/',
-      packages=[ 'cuse' ],
+      packages=['cuse'],
       provides=['cuse'],
-      cmdclass={ 'build_ctypes': build_ctypes}
-     )
+      cmdclass={'build_ctypes': build_ctypes}
+      )
