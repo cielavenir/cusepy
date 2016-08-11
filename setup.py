@@ -44,7 +44,9 @@ cuse_export_symbols = ['fuse_set_signal_handlers',
                        'ENOATTR',
                        'ENOTSUP',
                        'fuse_version',
-                       'fuse_kern_chan_new']
+                       'fuse_kern_chan_new',
+                       'fuse_lowlevel_notify_poll',
+                       'fuse_pollhandle_destroy']
 
 
 class build_ctypes(Command):
