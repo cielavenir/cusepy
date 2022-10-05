@@ -1,3 +1,19 @@
+I (@cielavenir) built cuse_api.py using Ubuntu xenial 16.04 virtual machine. This api.py should work on Linux (libfuse2 flavor), but other platforms are untested at all.
+
+```sh
+sudo apt update
+sudo apt upgrade
+sudo apt install -y libfuse-dev libattr1-dev gccxml python-dev python-pip python-wheel pkg-config subversion git g++-4.9
+if [ ! -f /usr/bin/gccxml.castxml ]; then
+    sudo mv /usr/bin/gccxml /usr/bin/gccxml.castxml
+    sudo update-alternatives --install /usr/bin/gccxml gccxml.castxml /usr/bin/gccxml.castxml 1
+    sudo update-alternatives --install /usr/bin/gccxml gccxml.castxml /usr/bin/gccxml.real 10
+fi
+sudo python -m pip install 'svn+http://svn.python.org/projects/ctypes/trunk/ctypeslib/#egg=ctypeslib-dev'
+```
+
+----
+
 Note that the low-level API needs to generate the Python interface
 to the local CUSE library before it can be used. For that,
 you have to have both the CUSE headers and the GCC-XML
