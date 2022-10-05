@@ -95,16 +95,16 @@ def init(operations_, devname, args, major=231, minor=1):
 
     # make sure fd 0,1 and 2 are open to avoid chaos
     while True:
-	fd = open("/dev/null", "rw")
-	if fd.fileno()>2:
-	    fd.close()
-	    break
+        fd = open("/dev/null", "rw")
+        if fd.fileno()>2:
+            fd.close()
+            break
 
     # Init cuse_ops
     module = globals()
     for (name, prototype) in libcuse.cuse_lowlevel_ops._fields_:
         if hasattr(operations, name):
-	    log.debug("provides %s function", name)
+            log.debug("provides %s function", name)
             setattr(cuse_ops, name, prototype(getattr(operations, name)))
 
     log.debug('Calling cuse_lowlevel_new')
@@ -115,14 +115,14 @@ def init(operations_, devname, args, major=231, minor=1):
     try:
       cuse=os.open(cuse_name, os.O_RDWR)
     except IOError, err:
-	if err.errno in [errno.ENODEV, errno.ENOENT]:
-	    log.info("fuse: device not found, try 'modprobe cuse'")
-	else:
-	    log.info("fuse: failed to open %s: %s" % (cuse_name,
-		os.strerror(err.errno)))
-	log.debug('Calling cuse_session_destroy')
-	libcuse.fuse_session_destroy(session)
-	raise
+        if err.errno in [errno.ENODEV, errno.ENOENT]:
+            log.info("fuse: device not found, try 'modprobe cuse'")
+        else:
+            log.info("fuse: failed to open %s: %s" % (cuse_name,
+                os.strerror(err.errno)))
+        log.debug('Calling cuse_session_destroy')
+        libcuse.fuse_session_destroy(session)
+        raise
 
     try:
       ch = libcuse.fuse_kern_chan_new(cuse)
@@ -206,8 +206,8 @@ def close():
 def __ioctl_symbols():
     out={}
     for k in dir(ioctl):
-	if not k.startswith('_') and type(getattr(ioctl, k, None)) is int:
-	    out[getattr(ioctl, k)]=k
+        if not k.startswith('_') and type(getattr(ioctl, k, None)) is int:
+            out[getattr(ioctl, k)]=k
     return out
 
 ioctl_dict = __ioctl_symbols()
