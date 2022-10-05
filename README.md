@@ -7,7 +7,7 @@ sudo apt install -y libfuse-dev libattr1-dev gccxml python-dev python-pip python
 if [ ! -f /usr/bin/gccxml.castxml ]; then
     sudo mv /usr/bin/gccxml /usr/bin/gccxml.castxml
     sudo update-alternatives --install /usr/bin/gccxml gccxml.castxml /usr/bin/gccxml.castxml 1
-    sudo update-alternatives --install /usr/bin/gccxml gccxml.castxml /usr/bin/gccxml.real 10
+    sudo update-alternatives --install /usr/bin/gccxml gccxml.real /usr/bin/gccxml.real 10
 fi
 sudo python -m pip install 'svn+http://svn.python.org/projects/ctypes/trunk/ctypeslib/#egg=ctypeslib-dev'
 ```
