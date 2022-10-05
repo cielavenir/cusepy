@@ -65,10 +65,13 @@ class build_ctypes(Command):
                   regex=cuse_export_regex, symbols=cuse_export_symbols, libs=['fuse']):
         '''Create ctypes API to given headers'''
 
+        basedir = os.path.abspath(os.path.dirname(sys.argv[0]))
+        api_file = os.path.join(basedir, 'cuse', output)
+        if os.path.isfile(api_file):
+            return
+
         from ctypeslib import h2xml, xml2py
         from ctypeslib.codegen import codegenerator as ctypeslib
-
-        basedir = os.path.abspath(os.path.dirname(sys.argv[0]))
 
         print('Creating ctypes API from local headers...')
 
@@ -95,7 +98,6 @@ class build_ctypes(Command):
         h2xml.main(argv)
 
         print('Calling xml2py...')
-        api_file = os.path.join(basedir, 'cuse', output)
         argv = ['xml2py.py', '-c', '-d', '-v', tmp_name, '-o', api_file]
         for l in libs:
             argv.append('-l')
