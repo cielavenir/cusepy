@@ -114,7 +114,7 @@ def init(operations_, devname, args, major=231, minor=1):
 
     try:
       cuse=os.open(cuse_name, os.O_RDWR)
-    except IOError, err:
+    except IOError as err:
         if err.errno in [errno.ENODEV, errno.ENOENT]:
             log.info("fuse: device not found, try 'modprobe cuse'")
         else:
@@ -128,7 +128,7 @@ def init(operations_, devname, args, major=231, minor=1):
       ch = libcuse.fuse_kern_chan_new(cuse)
       log.debug("got kern chan %s for fd %s" % (repr(ch), cuse))
       log.debug("%s" % libcuse.fuse_chan_fd(ch))
-    except Exception, err:
+    except Exception as err:
       log.error(err)
       libcuse.fuse_session_destroy(session)
       raise
