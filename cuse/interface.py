@@ -71,7 +71,7 @@ def init(operations_, devname, args, major=231, minor=1):
     '''Initialize a CUSE device'''
 
     def pointer_devname(devname):
-      a=cast(c_char_p("DEVNAME=%s" % devname), POINTER(c_char))
+      a=cast(c_char_p(("DEVNAME=%s" % devname).encode('utf-8')), POINTER(c_char))
       return POINTER(POINTER(c_char))(a)
 
     cuse_name="/dev/cuse"
@@ -95,7 +95,7 @@ def init(operations_, devname, args, major=231, minor=1):
 
     # make sure fd 0,1 and 2 are open to avoid chaos
     while True:
-        fd = open("/dev/null", "rw")
+        fd = open("/dev/null", "r+")
         if fd.fileno()>2:
             fd.close()
             break
@@ -162,7 +162,7 @@ def make_cuse_args(args):
     fuse_args = libcuse.fuse_args()
     fuse_args.allocated = 0
     fuse_args.argc = len(args1)
-    fuse_args.argv = (POINTER(c_char) * len(args1))(*[cast(c_char_p(x), POINTER(c_char))
+    fuse_args.argv = (POINTER(c_char) * len(args1))(*[cast(c_char_p(x.encode('utf-8')), POINTER(c_char))
                                                       for x in args1])
     return fuse_args
 

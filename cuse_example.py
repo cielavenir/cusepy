@@ -24,7 +24,7 @@ from cuse.interface import ioctl_dict
 class Device():
   '''A very simple example filesystem'''
   flag = False
-  input_buffer=""
+  input_buffer=b""
 
   def open(self, req, file_info):
     print ("open %s %s" %(req, file_info))
@@ -45,7 +45,7 @@ class Device():
     self.input_buffer=self.input_buffer[off+size+1:]
 
   def ioctl(self, req, cmd, arg_p, file_info, uflags, in_buff_p,
-							in_bufsz, out_bufsz):
+                                                        in_bufsz, out_bufsz):
     print ("ioctl %s" % ioctl_dict[cmd])
     libcuse.fuse_reply_ioctl(req, 0, None, 0);
 
@@ -60,6 +60,6 @@ if __name__ == '__main__':
     
     cuse.init(operations, devname, sys.argv[2:])
     try:
-	cuse.main(True)
-    except Exception, err:
-	print ("CUSE main ended %s" % str(err))
+        cuse.main(True)
+    except Exception as err:
+        print ("CUSE main ended %s" % str(err))
