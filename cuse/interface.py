@@ -155,7 +155,7 @@ def make_cuse_args(args):
 
     args1 = [ sys.argv[0] ]
     for opt in args:
-        args1.append(b'-o')
+        args1.append('-o')
         args1.append(opt)
 
     # Init fuse_args struct
