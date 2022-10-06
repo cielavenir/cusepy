@@ -61,13 +61,14 @@ operations = None
 cuse_ops = None
 session = None
 channel = None
+devname = None
 
 def fuse_version():
     '''Return version of loaded fuse library'''
 
     return libcuse.fuse_version()
 
-def init(operations_, devname, args, major=231, minor=1):
+def init(operations_, _devname, args, major=231, minor=1):
     '''Initialize a CUSE device'''
 
     def pointer_devname(devname):
@@ -81,7 +82,9 @@ def init(operations_, devname, args, major=231, minor=1):
     global cuse_ops
     global session
     global channel
+    global devname
 
+    devname = _devname
     operations = operations_
     cuse_ops = libcuse.cuse_lowlevel_ops()
     cuse_info = libcuse.cuse_info()
@@ -190,18 +193,31 @@ def close():
     global cuse_ops
     global session
     global channel
+    global devname
 
+    with open('/sys/devices/virtual/cuse/%s/abort'%devname, 'w') as f:
+        f.write('1\n')
+    log.debug('Calling fuse_session_exit')
+    libcuse.fuse_session_exit(session)
+    import time
+    while libcuse.fuse_session_exited(session) == 0:
+        time.sleep(0.1)
     log.debug('Calling fuse_session_remove_chan')
     libcuse.fuse_session_remove_chan(channel)
-    log.debug('Calling fuse_remove_signal_handlers')
-    libcuse.fuse_remove_signal_handlers(session)
-    log.debug('Calling fuse_session_destroy')
-    libcuse.fuse_session_destroy(session)
+    # somehow after closing need to access that file somehow
+    # it does not work, use sys/devices method
+    #import subprocess
+    #proc = subprocess.Popen(['dd','if=/dev/null','of=/dev/%s'%devname])
+    #while proc.poll() is None:
+    #    time.sleep(0.1)
+    log.debug('Calling cuse_lowlevel_teardown')
+    libcuse.cuse_lowlevel_teardown(session)
 
     operations = None
     cuse_ops = None
     session = None
     channel = None
+    devname = None
 
 def __ioctl_symbols():
     out={}
