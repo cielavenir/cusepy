@@ -125,16 +125,16 @@ def init(operations_, devname, args, major=231, minor=1):
         raise
 
     try:
-      ch = libcuse.fuse_kern_chan_new(cuse)
-      log.debug("got kern chan %s for fd %s" % (repr(ch), cuse))
-      log.debug("%s" % libcuse.fuse_chan_fd(ch))
+      channel = libcuse.fuse_kern_chan_new(cuse)
+      log.debug("got kern chan %s for fd %s" % (repr(channel), cuse))
+      log.debug("%s" % libcuse.fuse_chan_fd(channel))
     except Exception as err:
       log.error(err)
       libcuse.fuse_session_destroy(session)
       raise
 
     log.debug("adding channel to session")
-    libcuse.fuse_session_add_chan(session, ch)
+    libcuse.fuse_session_add_chan(session, channel)
 
     if libcuse.fuse_set_signal_handlers(session) == -1:
       libcuse.fuse_session_destroy(session)
