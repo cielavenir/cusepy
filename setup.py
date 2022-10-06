@@ -45,6 +45,8 @@ cuse_export_symbols = ['fuse_set_signal_handlers',
                        'ENOTSUP',
                        'fuse_version',
                        'fuse_kern_chan_new',
+                       'fuse_session_exit',
+                       'fuse_session_exited',
                        'fuse_lowlevel_notify_poll',
                        'fuse_pollhandle_destroy']
 

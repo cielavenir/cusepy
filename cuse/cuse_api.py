@@ -464,6 +464,21 @@ fuse_session_destroy.argtypes = [POINTER(fuse_session)]
 fuse_session_destroy.__doc__ = \
 """void fuse_session_destroy(fuse_session * se)
 /usr/include/fuse/fuse_lowlevel.h:1652"""
+# /usr/include/fuse/fuse_lowlevel.h 1652
+fuse_session_exit = _libraries['libfuse.so.2'].fuse_session_exit
+fuse_session_exit.restype = None
+# fuse_session_exit(se)
+fuse_session_exit.argtypes = [POINTER(fuse_session)]
+fuse_session_exit.__doc__ = \
+"""void fuse_session_exit(fuse_session * se)
+/usr/include/fuse/fuse_lowlevel.h:1652"""
+fuse_session_exited = _libraries['libfuse.so.2'].fuse_session_exited
+fuse_session_exited.restype = c_int
+# fuse_session_exited(se)
+fuse_session_exited.argtypes = [POINTER(fuse_session)]
+fuse_session_exited.__doc__ = \
+"""int fuse_session_exited(fuse_session * se)
+/usr/include/fuse/fuse_lowlevel.h:1652"""
 # /usr/include/fuse/fuse_lowlevel.h 1690
 fuse_session_loop = _libraries['libfuse.so.2'].fuse_session_loop
 fuse_session_loop.restype = c_int
